@@ -24,15 +24,23 @@ class View(ft.UserControl):
         self._title = ft.Text("TdP Baseball Manager 2026", color="blue", size=24)
         # self._page.controls.append(self._title)
 
-        self._ddAnno = ft.Dropdown(label="Anno", width=200, alignment=ft.alignment.top_left)
+        self._ddAnno = ft.Dropdown(label="Anno", width=200, alignment=ft.alignment.top_left, on_change=self._controller._choiceDDYear)  #on_change=self._controller._choiceDDYear  aggiunto con claude
+                                                                                              #permette di vedere nella console del main il valore che si è selezionato nel dropdown
+        self._controller.fillDDsYear()
+
+
 
         row1 = ft.Row([ft.Container(self._title, width=500),
                        ft.Container(None, width=0),
                        ft.Container(self._ddAnno, width=250)], alignment=ft.MainAxisAlignment.CENTER)
         self._txtOutSquadre = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=False)
+
         cont = ft.Container(self._txtOutSquadre, width=300, height= 200, alignment=ft.alignment.top_left, bgcolor="#deeded")
+
+
         self._btnCreaGrafo = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.handleCreaGrafo)
         row2 = ft.Row([cont, self._btnCreaGrafo], alignment=ft.MainAxisAlignment.CENTER, vertical_alignment=ft.CrossAxisAlignment.END)
+
 
         self._ddSquadra = ft.Dropdown(label="Squadra")
         self._btnDettagli = ft.ElevatedButton(text="Dettagli", on_click=self._controller.handleDettagli)
@@ -46,7 +54,7 @@ class View(ft.UserControl):
         self._page.controls.append(row3)
 
         for i in range(0,200):
-            self._txtOutSquadre.controls.append(ft.Text(f"Squadra {i}"))
+           self._txtOutSquadre.controls.append(ft.Text(f"Squadra {i}"))
 
         self._txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
         self._page.controls.append(ft.Container(self._txt_result, bgcolor="#deeded", height=350))

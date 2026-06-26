@@ -1,6 +1,9 @@
 [client]
 user=root
-password=root
+password=viola
 host=127.0.0.1
-database=test
+
+#va inserito il database che usiamo
+database=lahmansbaseballdb
+
 raise_on_warnings=True
