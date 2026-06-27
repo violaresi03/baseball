@@ -91,6 +91,12 @@ class Controller:
             vicini.append((vicino, peso))
         vicini.sort(key=lambda x: x[1], reverse=True)  # ordina per peso decrescente
         self._view._txt_result.controls.clear()  # svuota la ListView
+                                                 #Qui il .clear() ha senso perché handleDettagli viene chiamato ogni volta che l'utente sceglie una squadra dal dropdown.
+                                                 #   Quindi il flusso è:
+                                                  #  Utente sceglie "BOS" → la ListView si riempie coi vicini di BOS
+                                                  #  Utente sceglie "NYA" → prima si svuota la ListView, poi si riempie coi vicini di NYA
+
+                                                  #  Senza .clear(), i vicini di NYA si aggiungerebbero in coda a quelli di BOS, e dopo qualche selezione la lista sarebbe un casino.
         for vicino, peso in vicini:  # itera sui vicini ordinati
             self._view._txt_result.controls.append(ft.Text(f"{vicino}: {peso}"))  # mostra vicino e peso
         self._view.update_page()  # aggiorna la pagina
