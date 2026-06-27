@@ -15,7 +15,9 @@ class Controller:
 #DDROPDOWN
     def _choiceDDYear(self, e):
         self._choiceYear= e.control.value
-        self.fillDDsTeam(self._choiceYear)
+        self.fillDDsTeam(self._choiceYear)   #lo mettiamo perchè ci sono 2 dropdown, senno non lo metteremmo:
+                                                  #1. Utente seleziona un anno → scatta _choiceDDYear
+                                                  #2._choiceDDYear salva l'anno e chiama fillDDsTeam(year) per popolare il dropdown delle squadre filtrato per quell'anno
                                               #_choiceDDYear salva l'anno scelto dall'utente in self._choiceYear e
                                               # lo passa a fillDDsTeam(self._choiceYear)
                                               #fillDDsTeam riceve quell'anno come parametro year
