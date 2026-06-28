@@ -15,7 +15,7 @@ class Controller:
 #DDROPDOWN
     def _choiceDDYear(self, e):
         self._choiceYear= e.control.value
-        self.fillDDsTeam(self._choiceYear)   #lo mettiamo perchè ci sono 2 dropdown, senno non lo metteremmo:
+        self.fillDDsTeam(self._choiceYear)   #lo mettiamo perchè ci sono 2 dropdown e il 2 dipe dal primo, senno non lo metteremmo:
                                                   #1. Utente seleziona un anno → scatta _choiceDDYear
                                                   #2._choiceDDYear salva l'anno e chiama fillDDsTeam(year) per popolare il dropdown delle squadre filtrato per quell'anno
                                               #_choiceDDYear salva l'anno scelto dall'utente in self._choiceYear e
@@ -36,8 +36,8 @@ class Controller:
 
 
 
-#LISTVIEW
-
+#LISTVIEW E DROPDOWN 2
+    #(fillDDsTeam usa choiceDDYear, aggiunge i team al dropdown e alla listview in base all'anno scelto)
     def fillDDsTeam(self, year):   #dato che ha un parametro scelto dall'utente non lo metto nella view
                                    #Va chiamato solo dopo che l'utente ha selezionato un anno, cioè quando scatta on_change sul dropdown —
                                    # e quel momento è gestito da _choiceDDYear nel controller.
@@ -48,13 +48,30 @@ class Controller:
                                                     #ogni volta che selezioni un anno, la ListView si svuota e
                                                     # si riempie con i team di quell'anno.
         for team in teams:
+            #Listview
             self._view._txtOutSquadre.controls.append(ft.Text(str(team))) #guarda da view
-                                                                           #AGGIUNTO i team alla LISTVIEW
-            teamsoptions = list(map(lambda x: ft.dropdown.Option(x), teams))    #DROPDOWN
-            self._view._ddSquadra.options = teamsoptions[1:]  # leggi da view
-                                                              #Non seleziono la prima riga del dropdown
-                                                              # (era quella con f"Team trovati: {teams}")
+            #                                                             #AGGIUNTO i team alla LISTVIEW
+            #dropdown
+            teamsoptions = list(map(lambda x: ft.dropdown.Option(x), teams))    # crea opzioni per il Dropdown
+            self._view._ddSquadra.options = teamsoptions[1:]  # popolo il dropdown con gli stessi team della listview
+                                                              # leggi da view
+                                                              # Non seleziono la prima riga della listview nel dropdown
+            #                                                # (era quella con f"Team trovati: {teams}")
         self._view.update_page()
+
+#LISTVIEW
+#se avesssimo dovuto fare solo una listview con i team trovati per un determinato anno nel dropdown di partenza
+    # LISTVIEW
+    #def fillDDsTeam(self, year):   # dato che ha un parametro scelto dall'utente non lo metto nella view
+                                   # Va chiamato solo dopo che l'utente ha selezionato un anno, cioè quando scatta on_change sul dropdown —
+                                   # e quel momento è gestito da _choiceDDYear nel controller.
+        #teams = self._model.getAllTeams(year)
+        #self._view._txtOutSquadre.controls.clear()  # una ListView contiene una lista di elementi dentro .controls.
+                                                    # ogni volta che selezioni un anno, la ListView si svuota e
+                                                    # si riempie con i team di quell'anno.
+        #for team in teams:
+            #self._view._txtOutSquadre.controls.append(ft.Text(str(team)))  # aggiunge ogni team alla ListView
+        #self._view.update_page()
 
 
 #GRAFO
@@ -74,7 +91,7 @@ class Controller:
       #  nNodi, nArchi = self._model.getGraphDetails()  # prende numero nodi e archi dal model
        # self._view._txt_result.controls.clear()
        # self._view._txt_result.controls.append(ft.Text(f"Nodi: {nNodi}, Archi: {nArchi}"))
-       # self._view.update_page()
+       #self._view.update_page()
 
     def handleDettagli(self, e):  #viene cliccano nel btn on click della view
         squadra = self._view._ddSquadra.value  # prende la squadra scelta dall'utente nel dropdown
