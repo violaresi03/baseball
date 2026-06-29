@@ -28,13 +28,11 @@ class Model:
 
        self._teams=DAO.getAllNodes(year)  #chiamo temas perché nei nodi ci sono i nomi dei team
                                           #self._teams = res del DAO
-       for t in self._teams:
-            self._idMapTeams[t]=t   #Teams perchè sono i vertici
-                                    #self._idMapTeams è un dizionario dove:
-                                    #la chiave è t (il teamCode, es. "BOS")
-                                    #il valore è t (stesso teamCode)
-                                    #Serve dopo in getAllEdges per verificare se un team è nel grafo
-       self._graph.add_nodes_from(self._teams)
+                                          ## [(teamCode, name), ...]
+       for teamCode, name in self._teams:  # ← spacchetta la tupla
+            self._idMapTeams[teamCode] = teamCode
+            self._graph.add_node(teamCode, name=name)  # ← salva il nome come attributo
+
 
 
        #AGGIUNGIAMO ARCHI

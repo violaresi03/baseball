@@ -105,9 +105,11 @@ class Controller:
                                                        #neighbors è un metodo di NetworkX
                                                        # È già incluso nella libreria e restituisce automaticamente
                                                        # i vicini di un nodo dal grafo che hai costruito con add_edge.
-            dati_arco = self._graph[squadra][vicino]  # accede al dizionario intermedio, es. self._graph["BOS"]["NYA"] → restituisce {"weight": 1500000.0}
-            peso = dati_arco["weight"]  #prende il valore della chiave "weight" da quel dizionario → restituisce 1500000.0
-            vicini.append((vicino, peso))
+            peso = self._graph[squadra][vicino]["weight"]#prende il valore della chiave "weight" da quel dizionario → restituisce 1500000.0
+            print(f"DEBUG: {squadra} - {vicino} → peso={peso}")
+            nome = self._graph.nodes[vicino].get("name",
+                                                vicino)  # ← legge il nome
+            vicini.append((nome, peso))
         vicini.sort(key=lambda x: x[1], reverse=True)  # ordina per peso decrescente
         self._view._txt_result.controls.clear()  # svuota la ListView
                                                  #Qui il .clear() ha senso perché handleDettagli viene chiamato ogni volta che l'utente sceglie una squadra dal dropdown.
@@ -116,8 +118,8 @@ class Controller:
                                                   #  Utente sceglie "NYA" → prima si svuota la ListView, poi si riempie coi vicini di NYA
 
                                                   #  Senza .clear(), i vicini di NYA si aggiungerebbero in coda a quelli di BOS, e dopo qualche selezione la lista sarebbe un casino.
-        for vicino, peso in vicini:  # itera sui vicini ordinati
-            self._view._txt_result.controls.append(ft.Text(f"{vicino}: {peso}"))  # mostra vicino e peso
+        for nome, peso in vicini:  # itera sui vicini ordinati
+            self._view._txt_result.controls.append(ft.Text(f"{peso} - {nome}"))  # mostra vicino e peso
         self._view.update_page()  # aggiorna la pagina
         print(f"Vicini: {vicini}")
 

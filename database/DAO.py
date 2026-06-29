@@ -67,22 +67,19 @@ class DAO():
             cnx.close()
 
     @staticmethod
-    def getAllNodes(year):  #si selezionano tutti i nodi del grafo
-                            #parametro di selezione
+    def getAllNodes(year):
         cnx = DBConnect.get_connection()
         try:
             cursor = cnx.cursor(dictionary=True, buffered=True)
-            query = """SELECT DISTINCT t.teamCode
+            query = """SELECT DISTINCT t.teamCode, t.name
                        FROM teams t
-                        WHERE year>= %s 
+                       WHERE year >= %s
                        ORDER BY t.year ASC"""
-            cursor.execute(query, (year, ))
+            cursor.execute(query, (year,))
             res = []
-            for row in cursor:    #cursor contiene i risultati della query
-                                  #ogni row è un dizionario es. {"teamCode": "BOS"}
-                res.append(row["teamCode"])  #seleziono i valori della chiave
-                                             #row["teamCode"] prende il valore "BOS" e lo aggiunge alla lista res
-            return res       #alla fine res è una lista di stringhe: ["BOS", "NYA", "CLE", ...]
+            for row in cursor:
+                res.append((row["teamCode"], row["name"]))
+            return res
         except Exception as e:
             print(f"Errore getAllNodes: {e}")
             return []
@@ -90,13 +87,14 @@ class DAO():
             cursor.close()
             cnx.close()
 
+
     @staticmethod
     def getAllEdges(year, idMapTeams):
         cnx = DBConnect.get_connection()
         try:
             cursor = cnx.cursor(dictionary=True, buffered=True)
-            query = """SSELECT t1.teamCode AS team1, t2.teamCode AS team2,
-                        s1.totale + s2.totale AS peso
+            query = """SELECT t1.teamCode AS team1, t2.teamCode AS team2,
+                        COALESCE(s1.totale, 0) + COALESCE(s2.totale, 0) AS peso
                         FROM teams t1, teams t2,
                         (SELECT teamCode, year, SUM(salary) AS totale 
                                     FROM salaries 
@@ -111,7 +109,7 @@ class DAO():
                         AND t1.year = s1.year
                         AND t2.teamCode = s2.teamCode
                         AND t2.year = s2.year
-                        GROUP BY t1.teamCode, t2.teamCode"""
+                         GROUP BY t1.teamCode, t2.teamCode"""
 
             cursor.execute(query, (year,))
             res = []
